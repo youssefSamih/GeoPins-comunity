@@ -10,9 +10,10 @@ import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import { Input } from "@material-ui/core";
 import Context from '../../context';
 import axios from "axios";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
 import { useClient } from "../../client";
-import { REACT_APP_CLOUDINARY, REACT_APP_URL } from "../../env"
+import { REACT_APP_CLOUDINARY } from "../../env"
 
 const CreatePin = ({ classes }) => {
   const client = useClient();
@@ -20,7 +21,8 @@ const CreatePin = ({ classes }) => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
-  const [submitting, setSubmitting] = useState(false)
+  const [submitting, setSubmitting] = useState(false);
+  const mobileSize = useMediaQuery('(max-width: 650px');
 
   const handleSubmit = async event => {
     try {
@@ -29,9 +31,9 @@ const CreatePin = ({ classes }) => {
       const url = await handleImageUpload();
       const { latitude, longitude } = state.draft;
       const variables = { title, image: url, content, latitude, longitude }
-      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables);
-      console.log("Pin created", { createPin });
-      dispatch({ type: "CREATE_PIN", payload: createPin });
+      /*const { createPin } =*/ await client.request(CREATE_PIN_MUTATION, variables);
+      // console.log("Pin created", { createPin });
+      // dispatch({ type: "CREATE_PIN", payload: createPin });
       handleDeleteDraft();
     } catch (err) {
       setSubmitting(false);
@@ -101,7 +103,7 @@ const CreatePin = ({ classes }) => {
           name="content"
           label="Content"
           multiline
-          rows="6"
+          rows={mobileSize ? "3" : "6"}
           margin="normal"
           fullWidth
           variant="outlined"

@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MapIcon from "@material-ui/icons/Map";
 import Typography from "@material-ui/core/Typography";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 
 import Context from '../context';
 import Signout from '../components/Auth/Signout';
@@ -11,6 +12,7 @@ import Signout from '../components/Auth/Signout';
 const Header = ({ classes }) => {
   const { state } = useContext(Context);
   const { currentUser } = state;
+  const mobileSize = useMediaQuery('(max-width: 650px');
   return (
     <div className={classes.root}>
       <AppBar position="static" >
@@ -22,6 +24,7 @@ const Header = ({ classes }) => {
               variant="h6"
               color="inherit"
               noWrap
+              className={mobileSize ? classes.mobile : ""}
             >
               GeoPins
             </Typography>
@@ -37,6 +40,7 @@ const Header = ({ classes }) => {
                 variant="h5"
                 color="inherit"
                 noWrap
+                className={mobileSize ? classes.mobile : ""}
               >
                 {currentUser.name}
               </Typography>
