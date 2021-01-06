@@ -3,13 +3,13 @@ import { GoogleLogout } from "react-google-login";
 import { withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Typography from "@material-ui/core/Typography";
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import Context from '../../context';
+import Context from "../../context";
 
 const Signout = ({ classes }) => {
   const { dispatch } = useContext(Context);
-  const mobileSize = useMediaQuery('(max-width: 650px');
+  const mobileSize = useMediaQuery("(max-width: 650px");
 
   const onSignout = () => {
     dispatch({ type: "SIGNOUT_USER" });
@@ -39,15 +39,15 @@ const Signout = ({ classes }) => {
 const styles = {
   root: {
     cursor: "pointer",
-    display: "flex"
+    display: "flex",
   },
   buttonText: {
-    color: "orange"
+    color: "orange",
   },
   buttonIcon: {
     marginLeft: "5px",
-    color: "orange"
-  }
+    color: "orange",
+  },
 };
 
 export default withStyles(styles)(Signout);

@@ -8,30 +8,33 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 import { Input } from "@material-ui/core";
-import Context from '../../context';
+import Context from "../../context";
 import axios from "axios";
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { CREATE_PIN_MUTATION } from "../../graphql/mutations";
 import { useClient } from "../../client";
-import { REACT_APP_CLOUDINARY } from "../../env"
+import { REACT_APP_CLOUDINARY } from "../../env";
 
 const CreatePin = ({ classes }) => {
   const client = useClient();
-  const { state, dispatch } = useContext(Context)
+  const { state, dispatch } = useContext(Context);
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const mobileSize = useMediaQuery('(max-width: 650px');
+  const mobileSize = useMediaQuery("(max-width: 650px");
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     try {
       event.preventDefault();
       setSubmitting(true);
       const url = await handleImageUpload();
       const { latitude, longitude } = state.draft;
-      const variables = { title, image: url, content, latitude, longitude }
-      /*const { createPin } =*/ await client.request(CREATE_PIN_MUTATION, variables);
+      const variables = { title, image: url, content, latitude, longitude };
+      /*const { createPin } =*/ await client.request(
+        CREATE_PIN_MUTATION,
+        variables
+      );
       // console.log("Pin created", { createPin });
       // dispatch({ type: "CREATE_PIN", payload: createPin });
       handleDeleteDraft();
@@ -42,29 +45,26 @@ const CreatePin = ({ classes }) => {
   };
 
   const handleDeleteDraft = () => {
-    setTitle('');
-    setImage('');
-    setContent('');
+    setTitle("");
+    setImage("");
+    setContent("");
     dispatch({ type: "DELETE_DRAFT" });
   };
 
   const handleImageUpload = async () => {
     const data = new FormData();
-    if(image) {
+    if (image) {
       data.append("file", image);
       data.append("upload_preset", "geopins");
       data.append("cloud_name", "youssefsamih");
-      const res = await axios.post(
-        `${REACT_APP_CLOUDINARY}`,
-        data
-      );
+      const res = await axios.post(`${REACT_APP_CLOUDINARY}`, data);
       // console.log(data.file);
       return res.data.url;
     }
   };
 
   return (
-    <form className={classes.form} >
+    <form className={classes.form}>
       <Typography
         className={classes.alignCenter}
         component="h2"
@@ -74,18 +74,18 @@ const CreatePin = ({ classes }) => {
         <LandscapeIcon className={classes.iconLarge} /> Pin Location
       </Typography>
       <div>
-        <TextField 
+        <TextField
           name="title"
           label="Title"
           placeholder="Insert pin title"
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <Input 
+        <Input
           accept="image/*"
           id="image"
           type="file"
           className={classes.input}
-          onChange={e => setImage(e.target.files[0])}
+          onChange={(e) => setImage(e.target.files[0])}
         />
         <label htmlFor="image">
           <Button
@@ -99,7 +99,7 @@ const CreatePin = ({ classes }) => {
         </label>
       </div>
       <div className={classes.contentField}>
-        <TextField 
+        <TextField
           name="content"
           label="Content"
           multiline
@@ -107,11 +107,11 @@ const CreatePin = ({ classes }) => {
           margin="normal"
           fullWidth
           variant="outlined"
-          onChange={e => setContent(e.target.value)}
+          onChange={(e) => setContent(e.target.value)}
         />
       </div>
       <div>
-        <Button 
+        <Button
           className={classes.button}
           variant="contained"
           color="primary"
@@ -120,13 +120,13 @@ const CreatePin = ({ classes }) => {
           <ClearIcon className={classes.leftIcon} />
           Discard
         </Button>
-        <Button 
+        <Button
           type="submit"
           className={classes.button}
           variant="contained"
           color="secondary"
           onClick={handleSubmit}
-          disabled={!title.trim() ||!content.trim() || !image || submitting}
+          disabled={!title.trim() || !content.trim() || !image || submitting}
         >
           Submit
           <SaveIcon className={classes.rightIcon} />
@@ -136,44 +136,44 @@ const CreatePin = ({ classes }) => {
   );
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
   form: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    paddingBottom: theme.spacing.unit
+    paddingBottom: theme.spacing.unit,
   },
   contentField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: "95%"
+    width: "95%",
   },
   input: {
-    display: "none"
+    display: "none",
   },
   alignCenter: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   iconLarge: {
     fontSize: 40,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   leftIcon: {
     fontSize: 20,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   rightIcon: {
     fontSize: 20,
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
   },
   button: {
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit,
-    marginLeft: 0
-  }
+    marginLeft: 0,
+  },
 });
 
 export default withStyles(styles)(CreatePin);
